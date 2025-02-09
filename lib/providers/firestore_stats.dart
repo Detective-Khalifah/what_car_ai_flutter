@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:what_car_ai_flutter/models/car.dart';
 
 final firestoreStatsProvider =
     StreamProvider.autoDispose<FirestoreStats>((ref) {

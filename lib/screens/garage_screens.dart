@@ -1,37 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:what_car_ai_flutter/contexts/data_context.dart';
-import 'package:what_car_ai_flutter/contexts/purchases_context.dart';
 import 'package:what_car_ai_flutter/models/car.dart';
 import 'package:what_car_ai_flutter/providers/car_provider.dart';
 import 'package:what_car_ai_flutter/providers/collection_provider.dart';
 import 'package:what_car_ai_flutter/widgets/car_card.dart';
-// import 'package:what_car_flutter/components/car_card.dart';
-// import 'package:what_car_flutter/components/feature_info_card.dart';
-// import 'package:what_car_flutter/providers/data_provider.dart';
-// import 'package:what_car_flutter/providers/tab_state_provider.dart';
-// import 'package:what_car_flutter/utils/utilities.dart'; // For getRelativeTime
-// import 'package:what_car_flutter/screens/collection_details_screen.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:go_router/go_router.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:what_car_ai_flutter/models/car.dart';
 import 'package:what_car_ai_flutter/models/car_collection.dart';
-import 'package:what_car_ai_flutter/providers/collection_provider.dart';
-import 'package:what_car_ai_flutter/providers/firestore_stats.dart';
-import 'package:what_car_ai_flutter/widgets/car_card.dart';
 
 class GarageScreen extends ConsumerWidget {
+  const GarageScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = FirebaseAuth.instance.currentUser;

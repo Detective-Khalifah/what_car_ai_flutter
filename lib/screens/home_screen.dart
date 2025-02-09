@@ -6,9 +6,10 @@ import 'package:what_car_ai_flutter/constants/trending_cars.dart';
 import 'package:what_car_ai_flutter/providers/car_provider.dart';
 import 'package:what_car_ai_flutter/providers/firestore_stats.dart';
 import 'package:what_car_ai_flutter/widgets/car_card.dart';
-// import 'components/car_card.dart';
 
 class HomeScreen extends ConsumerWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final firestoreStats = ref.watch(firestoreStatsProvider);

@@ -8,20 +8,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:what_car_ai_flutter/contexts/data_context.dart';
 import 'package:what_car_ai_flutter/models/car.dart';
 import 'package:what_car_ai_flutter/providers/collection_provider.dart';
 import 'package:what_car_ai_flutter/services/scan_service.dart';
-// import 'package:what_car_flutter/providers/data_provider.dart';
-// import 'package:what_car_flutter/services/scan_service.dart';
-// import 'package:what_car_flutter/utils/utilities.dart'; // For getRelativeTime and formatPrice
-// import 'package:what_car_flutter/screens/car_not_found_screen.dart';
-// import 'package:what_car_flutter/screens/details_screen.dart';
 
 class ProcessingScreen extends ConsumerStatefulWidget {
   final String imageUri;
 
-  ProcessingScreen({required this.imageUri});
+  const ProcessingScreen({super.key, required this.imageUri});
 
   @override
   _ProcessingScreenState createState() => _ProcessingScreenState();

@@ -3,18 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:what_car_ai_flutter/contexts/data_context.dart';
-// import 'package:what_car_ai_flutter/components/car_card.dart';
 import 'package:what_car_ai_flutter/models/car.dart';
 import 'package:what_car_ai_flutter/models/car_collection.dart';
-import 'package:what_car_ai_flutter/providers/car_provider.dart';
 import 'package:what_car_ai_flutter/providers/collection_provider.dart';
-// import 'package:what_car_ai_flutter/providers/data_provider.dart';
-// import 'package:what_car_ai_flutter/utils/utilities.dart';
 import 'package:what_car_ai_flutter/widgets/car_card.dart'; // For getRelativeTime
 
 class CollectionDetailsScreen extends ConsumerStatefulWidget {
+  const CollectionDetailsScreen({super.key});
+
   @override
   _CollectionDetailsScreenState createState() =>
       _CollectionDetailsScreenState();
@@ -146,7 +142,7 @@ class _CollectionDetailsScreenState
                                           fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      '${_collection!.cars /*['cars']*/ ?.length ?? 0} ${(_collection!.cars /*['cars']*/ ?.length ?? 0) == 1 ? 'car' : 'cars'}',
+                                      '${_collection!.cars /*['cars']*/ .length} ${(_collection!.cars /*['cars']*/ .length) == 1 ? 'car' : 'cars'}',
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                   ],
@@ -159,8 +155,7 @@ class _CollectionDetailsScreenState
                       // Cars Grid
                       Expanded(
                         child: ListView.builder(
-                          itemCount:
-                              _collection!.cars /*['cars']*/ ?.length ?? 0,
+                          itemCount: _collection!.cars /*['cars']*/ .length,
                           itemBuilder: (context, index) {
                             final car = _collection!.cars /*['cars']*/ [index];
                             return CarCard(

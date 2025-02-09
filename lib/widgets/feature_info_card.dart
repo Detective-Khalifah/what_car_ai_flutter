@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class FeatureInfoCard extends StatelessWidget {
   final Map<String, dynamic> feature;
 
-  FeatureInfoCard({required this.feature});
+  const FeatureInfoCard({super.key, required this.feature});
 
   @override
   Widget build(BuildContext context) {

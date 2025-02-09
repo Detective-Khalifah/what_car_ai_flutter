@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-// import 'package:what_car_flutter/utils/utilities.dart'; // For formatting
 
 class PremiumScreen extends ConsumerStatefulWidget {
+  const PremiumScreen({super.key});
+
   @override
   _PremiumScreenState createState() => _PremiumScreenState();
 }
@@ -111,16 +112,16 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                     content:
                         Text('Subscription logic will be implemented soon')));
               },
-              child: Text(
-                _selectedPlan == 'free' ? 'Start Free Trial' : 'Continue',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(32)),
                 backgroundColor: Colors.grey[900],
                 foregroundColor: Colors.white,
+              ),
+              child: Text(
+                _selectedPlan == 'free' ? 'Start Free Trial' : 'Continue',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(height: 16),
@@ -160,6 +161,15 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ElevatedButton(
         onPressed: () => _selectPlan(plan),
+        style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+          backgroundColor:
+              _selectedPlan == plan ? Colors.purple[100] : Colors.grey[50],
+          foregroundColor:
+              _selectedPlan == plan ? Colors.purple[500] : Colors.grey[900],
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -180,15 +190,6 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                 color: Colors.purple[500],
               ),
           ],
-        ),
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-          backgroundColor:
-              _selectedPlan == plan ? Colors.purple[100] : Colors.grey[50],
-          foregroundColor:
-              _selectedPlan == plan ? Colors.purple[500] : Colors.grey[900],
         ),
       ),
     );

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:what_car_ai_flutter/contexts/data_context.dart';
-import 'package:what_car_ai_flutter/providers/collection_provider.dart';
-// import 'package:what_car_flutter/providers/data_provider.dart';
 
 class AboutScreen extends ConsumerStatefulWidget {
+  const AboutScreen({super.key});
+
   @override
   _AboutScreenState createState() => _AboutScreenState();
 }

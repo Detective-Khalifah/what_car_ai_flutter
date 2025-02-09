@@ -5,16 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-// import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:what_car_ai_flutter/contexts/data_context.dart';
 import 'package:what_car_ai_flutter/providers/collection_provider.dart';
-// import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-// import 'package:what_car_flutter/providers/data_provider.dart';
-// import 'package:what_car_flutter/screens/collection_details_screen.dart';
 
 class CollectionsScreen extends ConsumerStatefulWidget {
+  const CollectionsScreen({super.key});
+
   @override
   _CollectionsScreenState createState() => _CollectionsScreenState();
 }

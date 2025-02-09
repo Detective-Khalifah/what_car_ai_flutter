@@ -23,18 +23,18 @@ import 'screens/dashboard/tabs_layout.dart';
 
 final GoRouter router = GoRouter(
   routes: [
+    // GoRoute(
+    //   path: '/',
+    //   redirect: (context, state) => '/dashboard/home',
+    // ),
     GoRoute(
       path: '/',
-      redirect: (context, state) => '/dashboard/home',
+      builder: (context, state) => TabsLayout(),
     ),
     GoRoute(
       path: '/dashboard/home',
-      builder: (context, state) => TabsLayout(),
+      pageBuilder: (context, state) => MaterialPage(child: HomeScreen()),
     ),
-    // GoRoute(
-    //   path: '/dashboard/home',
-    //   pageBuilder: (context, state) => MaterialPage(child: HomeScreen()),
-    // ),
     GoRoute(
       path: '/details',
       pageBuilder: (context, state) => MaterialPage(

@@ -3,11 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:what_car_flutter/screens/processing_screen.dart';
-// import 'package:what_car_flutter/utils/utilities.dart'; // For getRelativeTime
-// import 'package:what_car_flutter/services/scan_service.dart';
 
 class ScanScreen extends ConsumerStatefulWidget {
+  const ScanScreen({super.key});
+
   @override
   _ScanScreenState createState() => _ScanScreenState();
 }

@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-// import 'package:apple_sign_in/apple_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -89,10 +87,10 @@ class AuthService {
         message = 'Invalid email address';
         break;
       case 'auth/user-disabled':
-        message = 'This account has been disabled';
+        message = 'This user account has been disabled';
         break;
       case 'auth/user-not-found':
-        message = 'User not found';
+        message = 'User not found for this credential';
         break;
       case 'auth/wrong-password':
         message = 'Invalid password';
@@ -108,12 +106,6 @@ class AuthService {
         break;
       case 'auth/operation-not-allowed':
         message = 'This authentication method is not enabled';
-        break;
-      case 'auth/user-disabled':
-        message = 'This user account has been disabled';
-        break;
-      case 'auth/user-not-found':
-        message = 'No user found for this credential';
         break;
       default:
         message = error.message;

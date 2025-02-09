@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-// import 'package:what_car_flutter/providers/data_provider.dart';
-// import 'package:what_car_flutter/utils/utilities.dart'; // For getRelativeTime
 
 class CarNotFoundScreen extends ConsumerWidget {
   final String imageUri;
 
-  CarNotFoundScreen({required this.imageUri});
+  const CarNotFoundScreen({super.key, required this.imageUri});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -79,13 +76,6 @@ class CarNotFoundScreen extends ConsumerWidget {
                   SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () => context.go('/scan'),
-                    child: Text(
-                      'Try Another Photo',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                     style: ElevatedButton.styleFrom(
                       padding:
                           EdgeInsets.symmetric(vertical: 16, horizontal: 32),
@@ -94,10 +84,24 @@ class CarNotFoundScreen extends ConsumerWidget {
                       backgroundColor: Theme.of(context).primaryColor,
                       foregroundColor: Colors.white,
                     ),
+                    child: Text(
+                      'Try Another Photo',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   SizedBox(height: 16),
                   OutlinedButton(
                     onPressed: () => context.go('/tips'),
+                    style: OutlinedButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      side: BorderSide(color: Theme.of(context).primaryColor),
+                    ),
                     child: Text(
                       'View Scanning Tips',
                       style: TextStyle(
@@ -105,13 +109,6 @@ class CarNotFoundScreen extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).primaryColor,
                       ),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      side: BorderSide(color: Theme.of(context).primaryColor),
                     ),
                   ),
                 ],

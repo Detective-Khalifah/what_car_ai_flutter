@@ -1,11 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-// import 'package:revenuecat/revenuecat.dart';
-import 'package:riverpod/riverpod.dart';
 
 const String REVENUECAT_API_KEY_IOS = 'YOUR_IOS_API_KEY';
 const String REVENUECAT_API_KEY_ANDROID = 'YOUR_ANDROID_API_KEY';
@@ -56,9 +54,13 @@ class PurchasesNotifier extends StateNotifier<PurchasesState> {
       final apiKey =
           Platform.isIOS ? REVENUECAT_API_KEY_IOS : REVENUECAT_API_KEY_ANDROID;
       await Purchases.configure(PurchasesConfiguration(apiKey));
-      print('✅ RevenueCat initialized');
+      if (kDebugMode) {
+        print('✅ RevenueCat initialized');
+      }
     } catch (error) {
-      print('❌ Error initializing RevenueCat: $error');
+      if (kDebugMode) {
+        print('❌ Error initializing RevenueCat: $error');
+      }
     }
   }
 
@@ -82,7 +84,9 @@ class PurchasesNotifier extends StateNotifier<PurchasesState> {
       final isPremium = info.entitlements.active.containsKey(ENTITLEMENT_ID);
       state = state.copyWith(customerInfo: info, isPremium: isPremium);
     } catch (error) {
-      print('❌ Error fetching customer info: $error');
+      if (kDebugMode) {
+        print('❌ Error fetching customer info: $error');
+      }
     }
   }
 
@@ -95,7 +99,9 @@ class PurchasesNotifier extends StateNotifier<PurchasesState> {
 
       state = state.copyWith(customerInfo: customerInfo, isPremium: isPremium);
     } catch (e) {
-      print('❌ Error fetching customer info: $e');
+      if (kDebugMode) {
+        print('❌ Error fetching customer info: $e');
+      }
     }
   }
 
@@ -111,7 +117,9 @@ class PurchasesNotifier extends StateNotifier<PurchasesState> {
       // state = state.copyWith(
       //     customerInfo: result.customerInfo, isPremium: isPremium);
     } catch (error) {
-      print('❌ Error purchasing package: $error');
+      if (kDebugMode) {
+        print('❌ Error purchasing package: $error');
+      }
     } finally {
       state = state.copyWith(loading: false);
     }
@@ -127,7 +135,9 @@ class PurchasesNotifier extends StateNotifier<PurchasesState> {
       //     restoredInfo.entitlements.active.containsKey(ENTITLEMENT_ID);
       // state = state.copyWith(customerInfo: restoredInfo, isPremium: isPremium);
     } catch (error) {
-      print('❌ Error restoring purchases: $error');
+      if (kDebugMode) {
+        print('❌ Error restoring purchases: $error');
+      }
     } finally {
       state = state.copyWith(loading: false);
     }

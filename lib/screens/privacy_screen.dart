@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-// import 'package:what_car_flutter/utils/utilities.dart'; // For formatting
 
 class PrivacyScreen extends StatelessWidget {
+  const PrivacyScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final sections = [

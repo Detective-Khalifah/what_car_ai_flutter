@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:what_car_ai_flutter/services/auth_service.dart';
-// import 'package:what_car_ai_flutter/utils/utilities.dart'; // For formatPrice
 
 class SettingsScreen extends ConsumerStatefulWidget {
+  const SettingsScreen({super.key});
+
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }

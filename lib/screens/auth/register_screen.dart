@@ -2,12 +2,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-// import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:what_car_ai_flutter/services/auth_service.dart';
-// import 'package:what_car_ai_flutter/providers/auth_provider.dart';
-// import 'package:what_car_flutter/constants.dart'; // Import your theme constants
 
 class RegisterScreen extends ConsumerStatefulWidget {
+  const RegisterScreen({super.key});
+
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
 }
@@ -194,14 +193,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     // Sign Up Button
                     ElevatedButton(
                       onPressed: handleEmailSignUp,
-                      child: Text(
-                          _loading ? 'Creating Account...' : 'Create Account'),
                       style: ElevatedButton.styleFrom(
                         padding:
                             EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
                       ),
+                      child: Text(
+                          _loading ? 'Creating Account...' : 'Create Account'),
                     ),
                   ],
                 ),

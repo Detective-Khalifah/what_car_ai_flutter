@@ -2,32 +2,21 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:what_car_ai_flutter/models/car.dart';
-import 'package:what_car_ai_flutter/providers/car_provider.dart';
-// import 'models/car.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:what_car_ai_flutter/services/scan_service.dart';
 import 'package:what_car_ai_flutter/utils/format.dart';
-// import 'package:what_car_flutter/components/car_card.dart';
-// import 'package:what_car_flutter/providers/data_provider.dart';
-// import 'package:what_car_flutter/screens/collection_details_screen.dart';
-// import 'package:what_car_flutter/utils/utilities.dart'; // For getRelativeTime
-// import 'package:what_car_flutter/services/scan_service.dart';
 
 class DetailsScreen extends ConsumerStatefulWidget {
   final String carData;
   final bool isFresh;
 
-  DetailsScreen({required this.carData, required this.isFresh});
+  const DetailsScreen(
+      {super.key, required this.carData, required this.isFresh});
 
   @override
   _DetailsScreenState createState() => _DetailsScreenState();
@@ -370,49 +359,3 @@ class _DetailsScreenState extends ConsumerState<DetailsScreen> {
     );
   }
 }
-/*
-class DetailsScreen extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // final car = context.watch<Car>(context.extra! as Car);
-    final carId = ModalRoute.of(context)?.settings.arguments as String?;
-    if (carId == null) {
-      return Scaffold(
-        appBar: AppBar(title: Text('Car Details')),
-        body: Center(child: Text('Car not found')),
-      );
-    }
-
-    final car = ref.watch(carDataProvider.select((data) =>
-        data.firestoreScans.firstWhere((c) => c.id == carId! as String)));
-
-    if (car == null) {
-      return Scaffold(
-        appBar: AppBar(title: Text('Car Details')),
-        body: Center(child: Text('Car not found')),
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(title: Text('Car Details')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Make: ${car.manufacturer}', style: TextStyle(fontSize: 20)),
-            SizedBox(height: 10),
-            Text('Model: ${car.name}'),
-            Text('Rarity: ${car.rarity}'),
-            Text('Match Accuracy: ${car.matchAccuracy}%'),
-            Text('Power: ${car?.power} hp'),
-            Text('Acceleration: ${car?.acceleration} s'),
-            Text('Scanned On: ${car.relativeTime}'),
-            // Add more details as needed
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/

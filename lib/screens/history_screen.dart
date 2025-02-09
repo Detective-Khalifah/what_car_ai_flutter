@@ -7,15 +7,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
-// import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:what_car_ai_flutter/contexts/data_context.dart';
 import 'package:what_car_ai_flutter/providers/collection_provider.dart';
-// import 'package:what_car_flutter/components/car_card.dart';
-// import 'package:what_car_flutter/providers/data_provider.dart';
-// import 'package:what_car_flutter/utils/utilities.dart'; // For getRelativeTime
 
 class HistoryScreen extends ConsumerStatefulWidget {
+  const HistoryScreen({super.key});
+
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
 }

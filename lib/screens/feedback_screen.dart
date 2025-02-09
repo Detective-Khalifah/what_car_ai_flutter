@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class FeedbackScreen extends ConsumerStatefulWidget {
   @override
@@ -137,15 +136,15 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               // Send Feedback Button
               ElevatedButton(
                 onPressed: sendEmail,
-                child: _loading
-                    ? CircularProgressIndicator(color: Colors.white)
-                    : Text('Send Feedback'),
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                   backgroundColor: Colors. /*violet*/ purple[600],
                 ),
+                child: _loading
+                    ? CircularProgressIndicator(color: Colors.white)
+                    : Text('Send Feedback'),
               ),
             ],
           ),

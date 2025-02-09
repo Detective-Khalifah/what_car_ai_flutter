@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:what_car_flutter/constants.dart'; // Import your theme constants
 
 class AuthLayout extends StatelessWidget {

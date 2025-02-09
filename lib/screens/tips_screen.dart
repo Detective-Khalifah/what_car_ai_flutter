@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-// import 'package:what_car_flutter/utils/utilities.dart'; // For formatting
 
 class TipsScreen extends StatelessWidget {
   final List<Map<String, dynamic>> _tips = [
@@ -32,6 +29,8 @@ class TipsScreen extends StatelessWidget {
       'color': Color(0xFFEC4899),
     },
   ];
+
+  TipsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

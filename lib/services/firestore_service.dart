@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:what_car_ai_flutter/models/car.dart';
-import 'package:what_car_ai_flutter/providers/car_provider.dart';
-// import 'package:what_car_flutter/models/car.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
