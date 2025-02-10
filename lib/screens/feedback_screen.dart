@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:go_router/go_router.dart';
 
 class FeedbackScreen extends ConsumerStatefulWidget {
+  const FeedbackScreen({super.key});
+
   @override
   _FeedbackScreenState createState() => _FeedbackScreenState();
 }
@@ -31,9 +34,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
       return;
     }
 
-    setState(() {
-      _loading = true;
-    });
+    setState(() => _loading = true);
 
     try {
       final email = Email(
@@ -56,9 +57,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
           content: Text('Failed to send feedback. Please try again later.')));
       print('Error sending email: $error');
     } finally {
-      setState(() {
-        _loading = false;
-      });
+      setState(() => _loading = false);
     }
   }
 
@@ -67,6 +66,10 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Encourage Us'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

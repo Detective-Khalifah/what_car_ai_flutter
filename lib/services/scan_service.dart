@@ -14,20 +14,26 @@ class ScanService {
         throw Exception('User must be logged in to save scans');
       }
 
+      // Ensure file exists before uploading
+      final file = File(imageUri);
+      if (!file.existsSync()) {
+        throw Exception('Image file not found');
+      }
+
       // Upload image to Firebase Storage
       final imageName =
           '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final storageRef =
           FirebaseStorage.instance.ref().child('scans/$imageName');
-      final file = File(imageUri);
+      // final file = File(imageUri);
       final uploadTask = await storageRef.putFile(file);
       final imageUrl = await uploadTask.ref.getDownloadURL();
 
       // Save scan data to Firestore
       final scanRef = await FirebaseFirestore.instance.collection('scans').add({
         'userId': user.uid,
-        'userEmail': user.email ?? null,
-        'userName': user.displayName ?? null,
+        'userEmail': user.email,
+        'userName': user.displayName,
         'carData': carData,
         'imageUrl': imageUrl,
         'createdAt': FieldValue.serverTimestamp(),
@@ -35,29 +41,40 @@ class ScanService {
 
       print('Scan saved successfully: ${scanRef.id}');
       return scanRef.id;
+    } on FirebaseException catch (e) {
+      print('🔥 Firebase Error: ${e.code} - ${e.message}');
+      throw Exception('Error saving scan: ${e.message}');
     } catch (error) {
-      print('Error saving scan: $error');
+      print('❌ General Error: $error');
       rethrow;
     }
   }
 
   Future<List<Map<String, dynamic>>> getUserScans() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      throw Exception('User must be logged in to get scans');
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw Exception('User must be logged in to get scans');
+      }
+
+      final scansSnapshot = await FirebaseFirestore.instance
+          .collection('scans')
+          .where('userId', isEqualTo: user.uid)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return scansSnapshot.docs.map((doc) {
+        return {
+          'id': doc.id,
+          ...doc.data(),
+        };
+      }).toList();
+    } on FirebaseException catch (e) {
+      print('🔥 Firebase Error: ${e.code} - ${e.message}');
+      throw Exception('Error fetching scans: ${e.message}');
+    } catch (error) {
+      print('❌ General Error: $error');
+      rethrow;
     }
-
-    final scansSnapshot = await FirebaseFirestore.instance
-        .collection('scans')
-        .where('userId', isEqualTo: user.uid)
-        .orderBy('createdAt', descending: true)
-        .get();
-
-    return scansSnapshot.docs.map((doc) {
-      return {
-        'id': doc.id,
-        ...doc.data(),
-      };
-    }).toList();
   }
 }

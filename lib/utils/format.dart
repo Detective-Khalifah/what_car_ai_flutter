@@ -1,3 +1,6 @@
+import 'package:intl/intl.dart';
+
 String formatPrice(double price) {
-  return '\$${price.toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(\.\d+)?$)'), (Match m) => '${m.group(1)},')}';
+  final format = NumberFormat.currency(locale: 'en_US', symbol: '\$');
+  return format.format(price);
 }

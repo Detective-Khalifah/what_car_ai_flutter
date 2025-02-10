@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class AuthLayout extends StatelessWidget {
   final Widget child;
 
-  AuthLayout({required this.child});
+  const AuthLayout({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +15,7 @@ class AuthLayout extends StatelessWidget {
         backgroundColor: isDark ? Colors.black : Colors.white,
         elevation: 0,
         iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black),
+        title: Text("Forgot Password"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

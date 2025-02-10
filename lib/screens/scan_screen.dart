@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+/// React Native’s expo-image-picker returns base64, but [Flutter]’s [image_picker] does not.
+/// ✅ Fix: If [base64] is needed, use [image]: ^4.5.2 to convert [image]s manually.
 
 class ScanScreen extends ConsumerStatefulWidget {
   const ScanScreen({super.key});
@@ -20,7 +24,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeCamera();
+    _requestCameraPermission();
+    // _initializeCamera();
   }
 
   @override
@@ -29,17 +34,27 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     super.dispose();
   }
 
+  Future<void> _requestCameraPermission() async {
+    final status = await Permission.camera.request();
+    if (status.isGranted) {
+      _initializeCamera();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Camera permission is required')),
+      );
+    }
+  }
+
   Future<void> _initializeCamera() async {
     final cameras = await availableCameras();
     final backCamera = cameras.firstWhere(
-        (camera) => camera.lensDirection == CameraLensDirection.back);
+      (camera) => camera.lensDirection == CameraLensDirection.back,
+    );
 
     _cameraController = CameraController(backCamera, ResolutionPreset.high);
     await _cameraController?.initialize();
     if (!mounted) return;
-    setState(() {
-      _isCameraReady = true;
-    });
+    setState(() => _isCameraReady = true);
   }
 
   Future<void> _pickImage() async {
@@ -60,12 +75,12 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
     }
   }
 
-  void _toggleFlash() {
-    setState(() {
-      _isFlashOn = !_isFlashOn;
-      _cameraController
-          ?.setFlashMode(_isFlashOn ? FlashMode.torch : FlashMode.off);
-    });
+  void _toggleFlash() async {
+    if (_cameraController == null || !_isCameraReady) return;
+    _isFlashOn = !_isFlashOn;
+    await _cameraController
+        ?.setFlashMode(_isFlashOn ? FlashMode.torch : FlashMode.off);
+    setState(() {}); // Update UI after changing flash mode
   }
 
   @override
@@ -112,7 +127,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                 IconButton(
                   icon: Icon(
                     _isFlashOn ? Icons.flash_on : Icons.flash_off,
-                    color: _isFlashOn ? Colors.yellow : Colors.grey,
+                    color: _isFlashOn
+                        ? Colors.yellow
+                        : Colors.white /*Colors.grey*/,
                   ),
                   onPressed: _toggleFlash,
                 ),
@@ -128,7 +145,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
               children: [
                 Text(
                   'Ensure the car is in focus',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  style: TextStyle(
+                      fontSize: 16, color: Colors.white /*Colors.grey*/),
                 ),
                 SizedBox(height: 16),
                 Row(

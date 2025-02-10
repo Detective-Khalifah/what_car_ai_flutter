@@ -197,6 +197,10 @@ class DataProvider extends StateNotifier<DataState> {
     }
   }
 
+  void setRecentScans(List<Car> scans) {
+    state = state.copyWith(recentScans: scans);
+  }
+
   void loadMore() async {
     if (!state.hasMore || state.isLoading || !state.isInitialized) return;
     try {

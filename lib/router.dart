@@ -16,6 +16,7 @@ import 'package:what_car_ai_flutter/screens/premium_screen.dart';
 import 'package:what_car_ai_flutter/screens/privacy_screen.dart';
 import 'package:what_car_ai_flutter/screens/processing_screen.dart';
 import 'package:what_car_ai_flutter/screens/scan_screen.dart';
+import 'package:what_car_ai_flutter/screens/settings_screen.dart';
 import 'package:what_car_ai_flutter/screens/terms_screen.dart';
 import 'package:what_car_ai_flutter/screens/tips_screen.dart';
 import 'screens/home_screen.dart'; // Assuming HomeScreen is in screens/home_screen.dart
@@ -33,15 +34,14 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/dashboard/home',
-      pageBuilder: (context, state) => MaterialPage(child: HomeScreen()),
+      builder: (context, state) => HomeScreen(),
     ),
     GoRoute(
       path: '/details',
-      pageBuilder: (context, state) => MaterialPage(
-          child: DetailsScreen(
+      builder: (context, state) => DetailsScreen(
         carData: '',
         isFresh: false,
-      )),
+      ),
       // context.go('/details', extra: car.id);
     ),
     GoRoute(
@@ -49,7 +49,7 @@ final GoRouter router = GoRouter(
       builder: (context, state) {
         final imageUri = state.uri.queryParameters['imageUri'] ?? '';
         return CarNotFoundScreen(imageUri: imageUri);
-        // child: CarNotFoundScreen(
+        //  CarNotFoundScreen(
         // imageUri: state.queryParams['imageUri']!,
         // imageUri: state.uri.queryParameters['imageUri']!,
         // ),
@@ -57,51 +57,50 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/auth/forgot-password',
-      pageBuilder: (context, state) =>
-          MaterialPage(child: ForgotPasswordScreen()),
+      builder: (context, state) => ForgotPasswordScreen(),
     ),
     GoRoute(
       path: '/auth/login',
-      pageBuilder: (context, state) => MaterialPage(child: LoginScreen()),
+      builder: (context, state) => LoginScreen(),
     ),
     GoRoute(
       path: '/auth/register',
-      pageBuilder: (context, state) => MaterialPage(child: RegisterScreen()),
+      builder: (context, state) => RegisterScreen(),
     ),
     GoRoute(
       path: '/collections/:id',
       pageBuilder: (context, state) => MaterialPage(
         child: CollectionDetailsScreen(
-            // arguments: state.pathParameters['id'],
-            // arguments: state.params['id'],
-            ),
+          collectionId: '',
+          // arguments: state.pathParameters['id'],
+          // arguments: state.params['id'],
+        ),
       ),
     ),
     GoRoute(
       path: '/garage',
-      pageBuilder: (context, state) => MaterialPage(child: GarageScreen()),
+      builder: (context, state) => GarageScreen(),
     ),
     GoRoute(
       path: '/scan',
-      pageBuilder: (context, state) => MaterialPage(child: ScanScreen()),
+      builder: (context, state) => ScanScreen(),
     ),
     // GoRoute(
     //   path: '/details',
-    //   pageBuilder: (context, state) => MaterialPage(
-    //       child: DetailsScreen(
+    //   builder: (context, state) => (
+    //        DetailsScreen(
     //     carData: state.extra! as String,
     //   )),
     // ),
     GoRoute(
       path: '/car-not-found',
-      pageBuilder: (context, state) => MaterialPage(
-          child: CarNotFoundScreen(
+      builder: (context, state) => (CarNotFoundScreen(
         imageUri: '',
       )),
     ),
     // GoRoute(
     //   path: '/process',
-    //   pageBuilder: (context, state) => MaterialPage(child: ProcessScreen()),
+    //   builder: (context, state) => ProcessScreen(),
     // ),
     GoRoute(
       path: '/process',
@@ -114,39 +113,43 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/tips',
-      pageBuilder: (context, state) => MaterialPage(child: TipsScreen()),
+      builder: (context, state) => TipsScreen(),
     ),
     GoRoute(
       path: '/about',
-      pageBuilder: (context, state) => MaterialPage(child: AboutScreen()),
+      builder: (context, state) => AboutScreen(),
     ),
     GoRoute(
       path: '/collections',
-      pageBuilder: (context, state) => MaterialPage(child: CollectionsScreen()),
+      builder: (context, state) => CollectionsScreen(),
     ),
     GoRoute(
       path: '/feedback',
-      pageBuilder: (context, state) => MaterialPage(child: FeedbackScreen()),
+      builder: (context, state) => FeedbackScreen(),
     ),
     GoRoute(
       path: '/help',
-      pageBuilder: (context, state) => MaterialPage(child: HelpScreen()),
+      builder: (context, state) => HelpScreen(),
     ),
     GoRoute(
       path: '/history',
-      pageBuilder: (context, state) => MaterialPage(child: HistoryScreen()),
+      builder: (context, state) => HistoryScreen(),
     ),
     GoRoute(
       path: '/premium',
-      pageBuilder: (context, state) => MaterialPage(child: PremiumScreen()),
+      builder: (context, state) => PremiumScreen(),
     ),
     GoRoute(
       path: '/privacy',
-      pageBuilder: (context, state) => MaterialPage(child: PrivacyScreen()),
+      builder: (context, state) => PrivacyScreen(),
+    ),
+    GoRoute(
+      path: "/settings",
+      builder: (context, state) => SettingsScreen(),
     ),
     GoRoute(
       path: '/terms',
-      pageBuilder: (context, state) => MaterialPage(child: TermsScreen()),
+      builder: (context, state) => TermsScreen(),
     ),
   ],
 );

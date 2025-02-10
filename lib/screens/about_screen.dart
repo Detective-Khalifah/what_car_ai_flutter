@@ -10,8 +10,8 @@ class AboutScreen extends ConsumerStatefulWidget {
 }
 
 class _AboutScreenState extends ConsumerState {
-  String version = "1.0.0";
-  String buildNumber = "1";
+  String? version;
+  String? buildNumber;
 
   @override
   void initState() {
@@ -21,16 +21,20 @@ class _AboutScreenState extends ConsumerState {
 
   Future<void> _loadAppInfo() async {
     final packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      version = packageInfo.version;
-      buildNumber = packageInfo.buildNumber;
-    });
+    if (mounted) {
+      setState(() {
+        version = packageInfo.version;
+        buildNumber = packageInfo.buildNumber;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // final version = ref.watch(dataProvider).version;
-    // final buildNumber = ref.watch(dataProvider).buildNumber;
+    final theme = Theme.of(context);
+    final bgColour = theme.colorScheme.primaryContainer.withOpacity(0.2);
+    final iconColour = theme.colorScheme.primary;
+
     final sections = [
       {
         'title': 'App Details',
@@ -90,32 +94,27 @@ class _AboutScreenState extends ConsumerState {
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 24.0),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
+                  color: bgColour,
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.circular(24)),
                 ),
                 child: Center(
                   child: Column(
                     children: [
-                      Icon(
-                        Icons.directions_car,
-                        size: 48,
-                        color: Colors.white,
-                      ),
+                      Icon(Icons.directions_car, size: 48, color: Colors.white),
                       SizedBox(height: 8),
                       Text(
                         'WhatCar',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                            // color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 4),
                       Text(
                         'Version $version',
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.grey.shade700,
                           fontSize: 16,
                         ),
                       ),
@@ -127,11 +126,9 @@ class _AboutScreenState extends ConsumerState {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Text(
-                  'Your personal car expert powered by artificial intelligence. Point your camera at any car and instantly get detailed information about its make, model, and features.',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
-                  ),
+                  'Your personal car expert powered by artificial intelligence. '
+                  'Point your camera at any car and instantly get detailed information about its make, model, and features.',
+                  style: TextStyle(color: Colors.grey, fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -145,9 +142,7 @@ class _AboutScreenState extends ConsumerState {
                       Text(
                         section['title'] as String,
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 8),
                       ...(section['items'] as List<dynamic>).map((item) {
@@ -160,16 +155,13 @@ class _AboutScreenState extends ConsumerState {
                                 Text(
                                   item['label'],
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey,
-                                  ),
+                                      fontSize: 16, color: Colors.grey),
                                 ),
                                 Text(
                                   item['value'],
                                   style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -178,24 +170,17 @@ class _AboutScreenState extends ConsumerState {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
                             child: ListTile(
-                              leading: Icon(
-                                item['icon'],
-                                size: 24,
-                                color: Colors.grey,
-                              ),
+                              leading: Icon(item['icon'],
+                                  size: 24, color: iconColour),
                               title: Text(
                                 item['label'],
                                 style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                               subtitle: Text(
                                 item['description'],
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                ),
+                                style:
+                                    TextStyle(fontSize: 14, color: Colors.grey),
                               ),
                             ),
                           );

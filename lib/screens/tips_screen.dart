@@ -143,10 +143,7 @@ class TipsScreen extends StatelessWidget {
           tip['description'],
           style: TextStyle(fontSize: 14, color: Colors.grey[700]),
         ),
-      ).animate().fadeIn /*Right*/ (
-          delay: Duration(
-              milliseconds:
-                  int.parse((400 + _tips.indexOf(tip) * 100) as String))),
+      ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.3, end: 0.0),
     );
   }
 
@@ -159,12 +156,16 @@ class TipsScreen extends StatelessWidget {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8),
-        ...practices.map((practice) => _buildPracticeItem(practice)).toList(),
+        ...practices
+            .asMap()
+            .entries
+            .map((practice) => _buildPracticeItem(practice.key, practice.value))
+            .toList(),
       ],
     );
   }
 
-  Widget _buildPracticeItem(String practice, {int index = 0}) {
+  Widget _buildPracticeItem(int index, String practice) {
     return ListTile(
       leading: Container(
         width: 24,
@@ -187,8 +188,6 @@ class TipsScreen extends StatelessWidget {
         practice,
         style: TextStyle(fontSize: 16, color: Colors.grey[700]),
       ),
-    )
-        .animate()
-        .fadeIn /*Right*/ (delay: Duration(milliseconds: 1000 + index * 100));
+    ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.3, end: 0.0);
   }
 }

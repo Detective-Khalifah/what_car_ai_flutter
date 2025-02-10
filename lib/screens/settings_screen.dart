@@ -24,9 +24,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Future<void> _loadUser() async {
     // final user = await ref.read(authServiceProvider).getCurrentUser();
     final user = await FirebaseAuth.instance.currentUser;
-    setState(() {
-      _user = user;
-    });
+    setState(() => _user = user);
   }
 
   Future<void> _logOut() async {
@@ -62,7 +60,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             'textColor': _user != null ? Colors.red : Colors.grey[900],
             'iconColor': _user != null ? Colors.red : Colors.grey[900],
             'onPress':
-                _user != null ? _logOut : () => context.go('/auth/login'),
+                _user != null ? _logOut : () => context.push('/auth/login'),
           },
           {
             'title': 'Drop A Feedback',
@@ -103,7 +101,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           children: [
             ...menuGroups.expand((group) => [
                   ...group['items']!
-                      .map((item) => _buildMenuItem(item))
+                      .map((item) => _buildMenuItem(context, item))
                       .toList(),
                   SizedBox(height: 16),
                 ]),
@@ -113,7 +111,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Widget _buildMenuItem(Map<String, dynamic> item) {
+  Widget _buildMenuItem(BuildContext context, Map<String, dynamic> item) {
     if (item.containsKey('type') && item['type'] == 'switch') {
       return SwitchListTile(
         title: Text(item['title']),
@@ -131,7 +129,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       trailing: Icon(Icons.chevron_right, color: Colors.grey[600]),
       onTap: item.containsKey('onPress')
           ? item['onPress']
-          : () => context.go(item['route']),
+          : (item.containsKey('route')
+              ? () => context.push(item['route'])
+              : null),
       enabled: item.containsKey('disabled') ? !item['disabled'] : true,
     );
   }

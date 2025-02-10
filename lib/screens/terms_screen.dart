@@ -114,30 +114,32 @@ class TermsScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Terms of Use',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Last updated: ${DateTime.now().toLocal().toString().split(' ')[0]}',
-              style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-            ),
-            SizedBox(height: 16),
-            ...sections
-                .map((section) => _buildSection(section['title']! as String,
-                    [section['content']! as String]))
-                .toList(),
-            SizedBox(height: 16),
-            Text(
-              'By using WhatCar, you acknowledge that you have read and agree to these Terms of Use.',
-              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-              textAlign: TextAlign.center,
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Terms of Use',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Last updated: ${DateTime.now().toLocal().toString().split(' ')[0]}',
+                style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+              ),
+              SizedBox(height: 16),
+              ...sections.map((section) => _buildSection(
+                  section['title']! as String,
+                  section['content']! as List<String>)),
+              // .toList(),
+              SizedBox(height: 16),
+              Text(
+                'By using WhatCar, you acknowledge that you have read and agree to these Terms of Use.',
+                style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -152,12 +154,16 @@ class TermsScreen extends StatelessWidget {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8),
-        ...content
-            .map((text) => Text(
-                  text,
-                  style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                ))
-            .toList(),
+        ...content.map(
+          (text) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Text(
+              text,
+              style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+            ),
+          ),
+        ),
+        // .toList(),
         SizedBox(height: 16),
       ],
     );

@@ -5,22 +5,53 @@ import 'package:what_car_ai_flutter/screens/garage_screens.dart';
 import 'package:what_car_ai_flutter/screens/home_screen.dart';
 import 'package:what_car_ai_flutter/screens/scan_screen.dart';
 
-class TabsLayout extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentIndex = ref.watch(tabIndexProvider);
-    final tabs = [
-      HomeScreen(),
-      ScanScreen(),
-      GarageScreen(),
-    ];
+class TabsLayout extends ConsumerStatefulWidget {
+  const TabsLayout({super.key});
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return _TabsLayoutState();
+  }
+}
+
+class _TabsLayoutState extends ConsumerState<TabsLayout> {
+  // final currentIndex = ref.watch(tabIndexProvider);
+  final List<Widget> tabs = [
+    HomeScreen(),
+    ScanScreen(),
+    GarageScreen(),
+  ];
+  int _selectedIndex = 0;
+
+  void _onTabTapped(int index) {
+    setState(() => _selectedIndex = index);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: tabs,
+      body: tabs[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onTabTapped,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.blueAccent,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark),
+            label: "Scans",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.garage),
+            label: "Saved",
+          ),
+        ],
       ),
-      bottomNavigationBar: CustomTabBar(ref: ref),
     );
   }
 }
@@ -28,7 +59,7 @@ class TabsLayout extends ConsumerWidget {
 class CustomTabBar extends ConsumerWidget {
   final WidgetRef ref;
 
-  CustomTabBar({required this.ref});
+  const CustomTabBar({super.key, required this.ref});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

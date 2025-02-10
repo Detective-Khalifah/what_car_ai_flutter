@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,50 +38,66 @@ class _ProcessingScreenState extends ConsumerState<ProcessingScreen> {
     EasyLoading.show(status: 'Processing...');
 
     try {
+      // Convert image to base64
       final base64Image = await _getImageBase64(widget.imageUri);
+
+      // Identify car using AI
       final carInfo = await _identifyCar(base64Image);
 
+      // If car is not found, go to "Car Not Found" screen
       if (carInfo == null) {
         context.go('/car-not-found', extra: {'imageUri': widget.imageUri});
-      } else {
-        final user = _auth.currentUser;
-        if (user != null) {
-          await _saveScan(carInfo, widget.imageUri, base64Image);
-        }
-        context.go('/details',
-            extra: {'carData': jsonEncode(carInfo), 'isFresh': true});
       }
+      final user = _auth.currentUser;
+
+      // Save scan data (if user is logged in)
+      await _saveScan(carInfo!, widget.imageUri, base64Image);
+
+      // Navigate to car details
+      context.go('/details', extra: {
+        'carData': jsonEncode(carInfo),
+        'isFresh': true,
+      });
     } catch (error) {
       print('Error processing image: $error');
       context.go('/car-not-found', extra: {'imageUri': widget.imageUri});
     } finally {
       EasyLoading.dismiss();
-      setState(() {
-        _isProcessing = false;
-      });
+      setState(() => _isProcessing = false);
     }
   }
 
+  /// **Convert image to Base64**
   Future<String> _getImageBase64(String imageUri) async {
-    final bytes = await NetworkAssetBundle(Uri.parse(imageUri)).load(imageUri);
-    final byteData = bytes.buffer.asUint8List();
-    return base64Encode(byteData);
+    // final bytes = await NetworkAssetBundle(Uri.parse(imageUri)).load(imageUri);
+    // final byteData = bytes.buffer.asUint8List();
+    //return base64Encode(byteData);
+
+    try {
+      File imageFile = File(imageUri);
+      List<int> imageBytes = await imageFile.readAsBytes();
+      return base64Encode(imageBytes);
+    } catch (error) {
+      print('Error reading image file: $error');
+      return '';
+    }
   }
 
+  /// **Call AI API for car recognition**
   Future<Car?> _identifyCar(String base64Image) async {
     try {
       final response = null;
       // await _scanService.identifyCar(base64Image); todo: fix error
-      if (response.contains('NOT_A_CAR')) {
-        return null;
-      }
-      return jsonDecode(response);
+      if (response.contains('NOT_A_CAR')) return null;
+
+      return Car.fromJson(jsonDecode(response));
     } catch (error) {
       print('Error identifying car: $error');
       return null;
     }
   }
 
+  /// **Save scan results**
   Future<void> _saveScan(
       Car carInfo, String imageUri, String base64Image) async {
     try {
@@ -118,8 +135,8 @@ class _ProcessingScreenState extends ConsumerState<ProcessingScreen> {
               children: [
                 // Image Container
                 Container(
-                  width: screenWidth,
-                  height: screenWidth,
+                  width: screenWidth * 0.9,
+                  height: screenWidth * 0.9,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.blue, width: 2),
                     borderRadius: BorderRadius.circular(8),
@@ -127,11 +144,14 @@ class _ProcessingScreenState extends ConsumerState<ProcessingScreen> {
                   child: Stack(
                     children: [
                       // Image
-                      Image.network(
-                        widget.imageUri,
-                        fit: BoxFit.contain,
-                        width: double.infinity,
-                        height: double.infinity,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.file(
+                          File(widget.imageUri),
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                        ),
                       ),
                       // Corners
                       Positioned(top: 0, left: 0, child: _buildCorner()),
@@ -147,52 +167,47 @@ class _ProcessingScreenState extends ConsumerState<ProcessingScreen> {
                           child: Container(
                             height: 2,
                             color: Colors.blue,
-                            child: Animate(
-                              effects: [
-                                MoveEffect(
-                                    duration: 4.seconds,
-                                    curve: Curves.linear,
-                                    begin: Offset(0, -screenHeight * 0.425),
-                                    end: Offset(0, screenHeight * 0.425)),
-                                FadeEffect(
-                                    duration: 2.seconds,
-                                    curve: Curves.easeInOut,
-                                    begin: 0.6,
-                                    end: 1.0),
-                              ],
-                              child: Container(),
-                            ),
+                          ).animate(
+                            effects: [
+                              MoveEffect(
+                                  duration: 4.seconds,
+                                  curve: Curves.linear,
+                                  // begin: Offset(0, -screenHeight * 0.425),
+                                  // end: Offset(0, screenHeight * 0.425)),
+                                  begin: Offset(0, -screenWidth * 0.9),
+                                  end: Offset(0, screenWidth * 0.9)),
+                              // FadeEffect(
+                              //     duration: 2.seconds,
+                              //     curve: Curves.easeInOut,
+                              //     begin: 0.6,
+                              //     end: 1.0),
+                            ],
                           ),
                         ),
                     ],
                   ),
                 ),
+                SizedBox(height: 20),
                 // Animated Icon
                 if (_isProcessing)
-                  Positioned(
-                    bottom: 20,
-                    left: 0,
-                    right: 0,
-                    child: Animate(
-                      effects: [
-                        FadeEffect(
-                            duration: Duration(seconds: 1), //1.second,
-                            curve: Curves.easeInOut,
-                            begin: 0.6,
-                            end: 1.0),
-                      ],
-                      child: Container(
-                        width: 64,
-                        height: 64,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(32),
-                        ),
-                        child: Icon(
-                          Icons.directions_car,
-                          size: 32,
-                          color: Colors.blue,
-                        ),
+                  Animate(
+                    effects: [
+                      FadeEffect(
+                          duration: Duration(seconds: 1), //1.second,
+                          curve: Curves.easeInOut,
+                          begin: 0.6,
+                          end: 1.0),
+                    ],
+                    child: Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                      child: Icon(
+                        Icons.directions_car,
+                        size: 32,
+                        color: Colors.blue,
                       ),
                     ),
                   ),

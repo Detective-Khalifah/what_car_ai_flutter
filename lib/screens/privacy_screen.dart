@@ -90,8 +90,8 @@ class PrivacyScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Privacy Policy',
@@ -103,10 +103,10 @@ class PrivacyScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16, color: Colors.grey[700]),
             ),
             SizedBox(height: 16),
-            ...sections
-                .map((section) => _buildSection(section['title']! as String,
-                    [section["content"]! as String]))
-                .toList(),
+            ...sections.map((section) => _buildSection(
+                section['title']! as String,
+                section["content"]! as List<String>)),
+            // .toList(),
             SizedBox(height: 16),
             Text(
               'By using WhatCar, you agree to this privacy policy and our terms of service.',
@@ -128,13 +128,17 @@ class PrivacyScreen extends StatelessWidget {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8),
-        ...content
-            .map((text) => Text(
-                  text,
-                  style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                ))
-            .toList(),
-        SizedBox(height: 16),
+        ...content.map(
+          (text) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2.0),
+            child: Text(
+              text,
+              style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+            ),
+          ),
+        ),
+        // .toList(),
+        const SizedBox(height: 16),
       ],
     );
   }

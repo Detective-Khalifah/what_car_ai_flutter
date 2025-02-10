@@ -3,13 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:go_router/go_router.dart';
 import 'package:what_car_ai_flutter/models/car.dart';
 import 'package:what_car_ai_flutter/models/car_collection.dart';
 import 'package:what_car_ai_flutter/providers/collection_provider.dart';
+import 'package:what_car_ai_flutter/utils/time_utils.dart';
 import 'package:what_car_ai_flutter/widgets/car_card.dart'; // For getRelativeTime
 
 class CollectionDetailsScreen extends ConsumerStatefulWidget {
-  const CollectionDetailsScreen({super.key});
+  final String collectionId;
+  const CollectionDetailsScreen({super.key, required this.collectionId});
 
   @override
   _CollectionDetailsScreenState createState() =>
@@ -20,24 +23,27 @@ class _CollectionDetailsScreenState
     extends ConsumerState<CollectionDetailsScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String? _collectionId;
+  // String? _collectionId;
   CarCollection? _collection;
   bool _loading = true;
 
   @override
   void initState() {
     super.initState();
-    _collectionId = ModalRoute.of(context)!.settings.arguments as String?;
+    // _collectionId = ModalRoute.of(context)!.settings.arguments as String?;
     _loadCollection();
   }
 
   Future<void> _loadCollection() async {
+    // CarCollection collection;
     EasyLoading.show(status: 'Loading...');
     try {
       final user = _auth.currentUser;
       if (user != null) {
-        final docSnapshot =
-            await _firestore.collection('collections').doc(_collectionId).get();
+        final docSnapshot = await _firestore
+            .collection('collections')
+            .doc(widget.collectionId)
+            .get();
         if (docSnapshot.exists) {
           setState(() {
             _collection = CarCollection.fromFirestore(docSnapshot);
@@ -46,7 +52,7 @@ class _CollectionDetailsScreenState
       } else {
         final localCollections = ref.watch(dataProvider).collections;
         final localCollection = localCollections
-            .firstWhere /*OrNull*/ ((c) => (c as Car).id == _collectionId);
+            .firstWhere((c) => (c as Car).id == widget.collectionId);
         if (localCollection != null) {
           setState(() {
             _collection = localCollection;
@@ -66,20 +72,23 @@ class _CollectionDetailsScreenState
   Future<void> _deleteCollection() async {
     EasyLoading.show(status: 'Deleting...');
     try {
-      if (_collectionId == '1') {
+      if (widget.collectionId == '1') {
         EasyLoading.showError('The Favorites collection cannot be deleted');
         return;
       }
 
       final user = _auth.currentUser;
       if (user != null) {
-        await _firestore.collection('collections').doc(_collectionId).delete();
+        await _firestore
+            .collection('collections')
+            .doc(widget.collectionId)
+            .delete();
       } else {
         // Handle local storage deletion
       }
 
       EasyLoading.showSuccess('Collection deleted');
-      Navigator.pop(context);
+      context.pop();
     } catch (error) {
       EasyLoading.showError('Failed to delete collection: $error');
     } finally {
@@ -90,99 +99,111 @@ class _CollectionDetailsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_collection != null ? _collection!.name /*['name']*/ : ''),
-        actions: [
-          if (_collection != null && _collectionId != '1')
-            IconButton(
-              icon: Icon(Icons.delete_outline),
-              onPressed: () => _showDeleteConfirmationDialog(),
-              color: Theme.of(context).colorScheme.error,
+      body: StreamBuilder(
+        stream: _firestore
+            .collection('collections')
+            .doc(widget.collectionId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || !snapshot.data!.exists) {
+            return const Center(child: Text('Collection not found'));
+          }
+
+          final collection = CarCollection.fromFirestore(snapshot.data!);
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(collection.name),
+              actions: [
+                if (widget.collectionId != '1')
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline),
+                    onPressed: () =>
+                        _showDeleteConfirmationDialog(collection.name),
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+              ],
             ),
-        ],
-      ),
-      body: _loading
-          ? Center(child: CircularProgressIndicator())
-          : _collection == null
-              ? Center(child: Text('Collection not found'))
-              : Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Collection Header
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Collection Header
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
                           children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.purple[100],
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      _collection!.icon /*['icon']*/,
-                                      style: TextStyle(fontSize: 24),
-                                    ),
-                                  ),
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.purple[100],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  collection.icon,
+                                  style: const TextStyle(fontSize: 24),
                                 ),
-                                SizedBox(width: 16),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _collection!.name /*['name']*/,
-                                      style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      '${_collection!.cars /*['cars']*/ .length} ${(_collection!.cars /*['cars']*/ .length) == 1 ? 'car' : 'cars'}',
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                  ],
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  collection.name,
+                                  style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  '${collection.cars.length} ${collection.cars.length == 1 ? 'car' : 'cars'}',
+                                  style: const TextStyle(color: Colors.grey),
                                 ),
                               ],
                             ),
                           ],
                         ),
-                      ),
-                      // Cars Grid
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: _collection!.cars /*['cars']*/ .length,
-                          itemBuilder: (context, index) {
-                            final car = _collection!.cars /*['cars']*/ [index];
-                            return CarCard(
-                              car: car,
-                              // Car.fromFirestore(car)
-
-                              //  {...car,
-                              //   'relativeTime':
-                              //       getRelativeTime(car['timestamp']),
-                              // style: 'w-full',},
-                            );
-                          },
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                  // Cars Grid
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: collection.cars.length,
+                      itemBuilder: (context, index) {
+                        final car = collection.cars[index];
+                        return CarCard(
+                          car: car.copyWith(
+                            relativeTime: getRelativeTime(car.timestamp),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
-  void _showDeleteConfirmationDialog() {
+  void _showDeleteConfirmationDialog(String collectionName) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Delete Collection'),
         content: Text(
-            'Are you sure you want to delete "${_collection!.name /*['name']*/}"? This action cannot be undone.'),
+            'Are you sure you want to delete "$collectionName"? This action cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

@@ -1,17 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class Constants {
-  // static double _screenWidth = MediaQuery.of(context).size.width;
-  // static double _screenHeight = MediaQuery.of(context).size.height;
+  static final MediaQueryData _mediaQuery = MediaQueryData.fromView(
+      WidgetsBinding.instance.platformDispatcher.views.first);
 
-// double _screenWidth = MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size.width;
-// double _screenHeight = MediaQueryData.fromWindow(WidgetsBinding.instance!.window).size.height;
-
-  static double screenWidth(BuildContext context) {
-    return MediaQuery.of(context).size.width;
-  }
-
-  static double screenHeight(BuildContext context) {
-    return MediaQuery.of(context).size.height;
-  }
+  static double get screenWidth => _mediaQuery.size.width;
+  static double get screenHeight => _mediaQuery.size.height;
 }

@@ -8,7 +8,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:what_car_ai_flutter/models/car.dart';
 import 'package:what_car_ai_flutter/providers/collection_provider.dart';
+import 'package:what_car_ai_flutter/utils/time_utils.dart';
 
 class HistoryScreen extends ConsumerStatefulWidget {
   const HistoryScreen({super.key});
@@ -86,7 +88,8 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final recentScans = ref.watch(dataProvider).recentScans;
+    final recentScans = ref
+        .watch(dataProvider.select((data) => data.recentScans)); //.recentScans;
     final displayedScans = recentScans.take(_page * _itemsPerPage).toList();
 
     return Scaffold(
@@ -118,7 +121,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
     );
   }
 
-  Widget _buildScanCard(Map<String, dynamic> scan) {
+  Widget _buildScanCard(Car scan) {
     final rarityStyles = {
       'Ultra Rare': Colors.red,
       'Very Rare': Colors.orange,
@@ -143,11 +146,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
         ),
         child: Stack(
           children: [
-            if (scan['images']?.isNotEmpty == true)
+            if (scan.images?.isNotEmpty == true)
               ClipRRect(
                 borderRadius: BorderRadius.circular(32),
                 child: CachedNetworkImage(
-                  imageUrl: scan['images'][0],
+                  imageUrl: scan.images[0],
                   width: double.infinity,
                   height: 420,
                   fit: BoxFit.cover,
@@ -196,12 +199,11 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color:
-                                  rarityStyles[scan['rarity']] ?? Colors.grey,
+                              color: rarityStyles[scan.rarity] ?? Colors.grey,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              scan['rarity'].toUpperCase(),
+                              scan.rarity.toUpperCase(),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,
@@ -218,7 +220,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                               ),
                               SizedBox(width: 4),
                               Text(
-                                '${scan['matchAccuracy']}% MATCH',
+                                '${scan.matchAccuracy}% MATCH',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 12,
@@ -235,14 +237,14 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            scan['manufacturer'],
+                            scan.manufacturer,
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.6),
                               fontSize: 16,
                             ),
                           ),
                           Text(
-                            scan['name'],
+                            scan.name,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 32,
@@ -255,11 +257,10 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               _buildStat('TOP SPEED',
-                                  '${scan['specs']['topSpeed']} mph'),
+                                  '${scan.specs?['topSpeed']} mph'),
                               _buildStat('0-60 MPH',
-                                  '${scan['specs']['acceleration']} sec'),
-                              _buildStat(
-                                  'POWER', '${scan['specs']['power']} hp'),
+                                  '${scan.specs?['acceleration']} sec'),
+                              _buildStat('POWER', '${scan.specs?['power']} hp'),
                             ],
                           ),
                           SizedBox(height: 16),
@@ -273,7 +274,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                               ),
                               SizedBox(width: 4),
                               Text(
-                                "Scanned {getRelativeTime(scan['timestamp'])}", // todo: fix error
+                                "Scanned ${getRelativeTimePkg(DateTime.fromMillisecondsSinceEpoch(scan.timestamp))}", // todo: fix error
                                 style: TextStyle(
                                   color: Colors.white.withOpacity(0.6),
                                   fontSize: 12,

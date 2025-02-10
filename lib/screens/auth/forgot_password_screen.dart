@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:what_car_ai_flutter/screens/auth/_layout.dart';
 import 'package:what_car_ai_flutter/services/auth_service.dart';
 // import 'package:what_car_flutter/constants.dart';
@@ -21,28 +22,27 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       return;
     }
 
-    setState(() {
-      _loading = true;
-    });
+    setState(() => _loading = true);
 
     try {
       await ref.read(authServiceProvider).sendPasswordResetEmail(email);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content:
               Text('Password reset email sent. Please check your inbox.')));
-      Navigator.pop(context);
+      context.pop();
     } catch (error) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Error: $error')));
     } finally {
-      setState(() {
-        _loading = false;
-      });
+      setState(() => _loading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return AuthLayout(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -56,7 +56,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             SizedBox(height: 16),
             Text(
               'Enter your email address and we\'ll send you instructions to reset your password.',
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(
+                  color: isDarkMode ? Colors.grey[400] : Colors.grey[700]),
             ),
             SizedBox(height: 24),
             TextFormField(
@@ -66,7 +67,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 prefixIcon: Icon(Icons.email, color: Colors.grey),
                 labelText: 'Email',
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: isDarkMode ? Colors.grey[900] : Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
@@ -76,16 +77,18 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             SizedBox(height: 24),
             ElevatedButton(
               onPressed: handleResetPassword,
-              child: Text(_loading ? 'Sending...' : 'Send Reset Link'),
               style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    theme.primaryColor, // Matches React Native's `bg-primary`
                 padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
               ),
+              child: Text(_loading ? 'Sending...' : 'Send Reset Link'),
             ),
             SizedBox(height: 16),
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => context.pop(),
               child: Text('Back to Login'),
             ),
           ],
